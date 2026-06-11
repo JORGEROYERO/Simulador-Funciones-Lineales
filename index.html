@@ -6,11 +6,11 @@
 <title>Simulador · Funciones Lineales</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;700;800&display=swap');
-  :root{--bg:#0a0e1a;--surface:#111827;--surface2:#1a2235;--accent:#00e5ff;--accent2:#ff6b6b;--accent3:#a78bfa;--correct:#10b981;--wrong:#ef4444;--text:#e2e8f0;--muted:#64748b;--grid:rgba(0,229,255,0.06);--line:rgba(0,229,255,0.15);}
+  :root{--bg:#0a0e1a;--surface:#111827;--surface2:#1a2235;--accent:#00e5ff;--accent3:#a78bfa;--correct:#10b981;--wrong:#ef4444;--text:#e2e8f0;--muted:#64748b;--line:rgba(0,229,255,0.15);}
   *{margin:0;padding:0;box-sizing:border-box;}
   body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
   body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse 60% 40% at 20% 10%,rgba(0,229,255,0.05) 0%,transparent 60%),radial-gradient(ellipse 50% 50% at 80% 80%,rgba(167,139,250,0.05) 0%,transparent 60%);}
-  .app{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:24px 20px;}
+  .app{position:relative;z-index:1;max-width:780px;margin:0 auto;padding:24px 20px;}
   header{display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;padding-bottom:20px;border-bottom:1px solid var(--line);}
   .logo-f{font-size:2rem;font-weight:800;color:var(--accent);letter-spacing:-2px;margin-right:10px;}
   .logo-text{font-size:0.75rem;font-family:'Space Mono',monospace;color:var(--muted);letter-spacing:3px;text-transform:uppercase;}
@@ -21,7 +21,6 @@
   .score-label{font-family:'Space Mono',monospace;font-size:0.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:2px;}
   .score-correct .score-num{color:var(--correct);}
   .score-wrong .score-num{color:var(--wrong);}
-  .score-total .score-num{color:var(--accent3);}
   .progress-bar{height:3px;background:var(--surface2);border-radius:2px;margin-bottom:28px;overflow:hidden;}
   .progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent3));border-radius:2px;transition:width 0.5s ease;}
   .card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:24px;}
@@ -36,76 +35,62 @@
   .start-btn{width:100%;padding:15px;background:linear-gradient(135deg,var(--accent),var(--accent3));border:none;border-radius:10px;color:#0a0e1a;font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;letter-spacing:1px;cursor:pointer;text-transform:uppercase;margin-top:8px;transition:all 0.2s;}
   .start-btn:hover{filter:brightness(1.1);transform:translateY(-1px);}
   .err-msg{color:var(--wrong);font-family:'Space Mono',monospace;font-size:0.75rem;margin-top:10px;display:none;}
-  .main-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start;}
-  @media(max-width:700px){.main-grid{grid-template-columns:1fr;}}
-  .graph-card{padding:20px;}
-  .graph-title{font-family:'Space Mono',monospace;font-size:0.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:3px;margin-bottom:14px;}
-  canvas{display:block;width:100%;border-radius:8px;background:var(--bg);}
-  .equation-display{text-align:center;margin-top:14px;font-family:'Space Mono',monospace;font-size:1.3rem;color:var(--accent);letter-spacing:1px;padding:10px;background:rgba(0,229,255,0.05);border-radius:8px;border:1px solid rgba(0,229,255,0.15);}
-  .graph-info{display:flex;gap:16px;margin-top:10px;flex-wrap:wrap;}
-  .ginfo{font-family:'Space Mono',monospace;font-size:0.68rem;color:var(--muted);display:flex;align-items:center;gap:6px;}
-  .ginfo-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);display:inline-block;}
   .question-tag{font-family:'Space Mono',monospace;font-size:0.6rem;color:var(--accent3);text-transform:uppercase;letter-spacing:3px;margin-bottom:8px;}
   .question-type-badge{display:inline-block;padding:3px 10px;border-radius:99px;font-size:0.65rem;font-family:'Space Mono',monospace;margin-bottom:14px;border:1px solid;}
   .badge-pendiente{color:#fbbf24;border-color:#fbbf24;background:rgba(251,191,36,0.08);}
-  .badge-intercepto{color:var(--accent);border-color:var(--accent);background:rgba(0,229,255,0.08);}
-  .badge-punto{color:var(--accent3);border-color:var(--accent3);background:rgba(167,139,250,0.08);}
-  .badge-grafica{color:#34d399;border-color:#34d399;background:rgba(52,211,153,0.08);}
-  .question-text{font-size:1.05rem;font-weight:700;line-height:1.5;margin-bottom:22px;min-height:60px;}
-  .options-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
-  .option-btn{background:var(--surface2);border:1.5px solid rgba(255,255,255,0.08);border-radius:10px;padding:14px 12px;color:var(--text);font-family:'Space Mono',monospace;font-size:0.85rem;cursor:pointer;transition:all 0.2s ease;text-align:left;line-height:1.4;}
-  .option-btn:hover:not(:disabled){border-color:var(--accent);background:rgba(0,229,255,0.06);transform:translateY(-1px);}
+  .badge-ecuacion{color:var(--accent);border-color:var(--accent);background:rgba(0,229,255,0.08);}
+  .badge-intercepto{color:#34d399;border-color:#34d399;background:rgba(52,211,153,0.08);}
+  .question-text{font-size:1.05rem;font-weight:700;line-height:1.6;margin-bottom:22px;}
+  .options-grid{display:grid;gap:10px;margin-bottom:20px;}
+  .option-btn{background:var(--surface2);border:1.5px solid rgba(255,255,255,0.08);border-radius:10px;padding:14px 16px;color:var(--text);font-family:'Space Mono',monospace;font-size:0.88rem;cursor:pointer;transition:all 0.2s ease;text-align:left;line-height:1.4;width:100%;}
+  .option-btn:hover:not(:disabled){border-color:var(--accent);background:rgba(0,229,255,0.06);}
   .option-btn.correct{border-color:var(--correct);background:rgba(16,185,129,0.12);color:#6ee7b7;}
   .option-btn.wrong{border-color:var(--wrong);background:rgba(239,68,68,0.1);color:#fca5a5;}
   .option-btn:disabled{cursor:not-allowed;}
-  .option-letter{display:inline-block;width:20px;height:20px;border-radius:4px;background:rgba(255,255,255,0.08);font-size:0.7rem;text-align:center;line-height:20px;margin-right:8px;font-weight:700;}
+  .option-letter{display:inline-block;width:22px;height:22px;border-radius:4px;background:rgba(255,255,255,0.08);font-size:0.7rem;text-align:center;line-height:22px;margin-right:10px;font-weight:700;}
   .option-btn.correct .option-letter{background:var(--correct);color:#fff;}
   .option-btn.wrong .option-letter{background:var(--wrong);color:#fff;}
-  .feedback{padding:12px 16px;border-radius:10px;font-size:0.88rem;font-family:'Space Mono',monospace;line-height:1.5;min-height:60px;opacity:0;transform:translateY(6px);transition:all 0.3s ease;margin-bottom:16px;}
+  .feedback{padding:12px 16px;border-radius:10px;font-size:0.85rem;font-family:'Space Mono',monospace;line-height:1.5;opacity:0;transform:translateY(6px);transition:all 0.3s ease;margin-bottom:16px;}
   .feedback.show{opacity:1;transform:translateY(0);}
   .feedback.correct-fb{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);color:#6ee7b7;}
   .feedback.wrong-fb{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:#fca5a5;}
   .next-btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--accent),var(--accent3));border:none;border-radius:10px;color:#0a0e1a;font-family:'Syne',sans-serif;font-weight:800;font-size:0.9rem;letter-spacing:1px;cursor:pointer;opacity:0;transform:translateY(4px);transition:all 0.3s ease;text-transform:uppercase;}
   .next-btn.show{opacity:1;transform:translateY(0);}
-  .next-btn:hover{filter:brightness(1.1);transform:translateY(-1px);}
-  .concept-panel{grid-column:1/-1;margin-top:4px;}
-  .concept-title{font-family:'Space Mono',monospace;font-size:0.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:3px;margin-bottom:12px;}
-  .concepts-row{display:flex;gap:12px;flex-wrap:wrap;}
-  .concept-chip{background:var(--surface2);border:1px solid var(--line);border-radius:10px;padding:12px 16px;flex:1;min-width:140px;}
-  .chip-label{font-family:'Space Mono',monospace;font-size:0.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:2px;display:block;margin-bottom:6px;}
-  .chip-value{font-size:0.95rem;font-weight:700;color:var(--accent);}
-  .end-screen{text-align:center;padding:60px 20px;display:none;animation:fadeIn 0.5s ease;}
-  @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  .next-btn:hover{filter:brightness(1.1);}
+  .end-screen{text-align:center;padding:60px 20px;display:none;}
   .end-icon{font-size:4rem;margin-bottom:16px;}
-  .end-title{font-size:2.5rem;font-weight:800;margin-bottom:8px;}
-  .end-sub{color:var(--muted);font-family:'Space Mono',monospace;font-size:0.85rem;margin-bottom:32px;}
-  .end-stats{display:flex;justify-content:center;gap:32px;margin-bottom:36px;}
+  .end-title{font-size:2rem;font-weight:800;margin-bottom:8px;}
+  .end-sub{color:var(--muted);font-family:'Space Mono',monospace;font-size:0.8rem;margin-bottom:32px;}
+  .end-stats{display:flex;justify-content:center;gap:32px;margin-bottom:36px;flex-wrap:wrap;}
   .end-stat{text-align:center;}
   .end-stat-num{font-size:2.5rem;font-weight:800;display:block;}
   .end-stat-label{font-family:'Space Mono',monospace;font-size:0.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:2px;}
-  .end-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;}
-  .restart-btn{padding:16px 40px;background:linear-gradient(135deg,var(--accent),var(--accent3));border:none;border-radius:12px;color:#0a0e1a;font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;letter-spacing:1px;cursor:pointer;text-transform:uppercase;transition:all 0.2s;}
+  .restart-btn{padding:16px 40px;background:linear-gradient(135deg,var(--accent),var(--accent3));border:none;border-radius:12px;color:#0a0e1a;font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;cursor:pointer;text-transform:uppercase;transition:all 0.2s;margin:6px;}
   .restart-btn:hover{filter:brightness(1.1);transform:translateY(-2px);}
-  .register-note{font-family:'Space Mono',monospace;font-size:0.72rem;color:var(--muted);background:rgba(0,229,255,0.05);border:1px dashed rgba(0,229,255,0.2);border-radius:10px;padding:12px 16px;margin-top:16px;line-height:1.6;}
+  .register-note{font-family:'Space Mono',monospace;font-size:0.72rem;color:var(--muted);background:rgba(0,229,255,0.05);border:1px dashed rgba(0,229,255,0.2);border-radius:10px;padding:14px 16px;margin-top:20px;line-height:1.7;text-align:left;}
+  .review{margin-top:32px;text-align:left;}
+  .review h3{font-size:1rem;font-family:'Space Mono',monospace;color:var(--accent3);margin-bottom:16px;text-transform:uppercase;letter-spacing:2px;}
+  .rev-item{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:10px;}
+  .rev-item.ok{border-color:rgba(16,185,129,0.4);}
+  .rev-item.no{border-color:rgba(239,68,68,0.4);}
+  .rev-q{font-size:0.85rem;font-weight:700;margin-bottom:6px;}
+  .rev-a{font-family:'Space Mono',monospace;font-size:0.75rem;color:var(--muted);}
+  .rev-a span{font-weight:700;}
 </style>
 </head>
 <body>
 <div class="app">
-
   <header>
     <div style="display:flex;align-items:baseline;gap:10px">
       <span class="logo-f">f(x)</span>
       <div>
         <div class="logo-text">Simulador · Funciones Lineales</div>
-        <div class="logo-sub">Inst. Ed. Técnica Agropecuaria de Luruaco &nbsp;·&nbsp; Docente: Jorge Royero</div>
+        <div class="logo-sub">I.E.T.A. Luruaco &nbsp;·&nbsp; Grado 10° &nbsp;·&nbsp; Docente: Jorge Royero</div>
       </div>
     </div>
-    <div style="display:flex;align-items:center;gap:16px">
-      <div class="score-board" id="scoreBoard" style="display:none">
-        <div class="score-item score-correct"><span class="score-num" id="sCorrect">0</span><span class="score-label">Correctas</span></div>
-        <div class="score-item score-wrong"><span class="score-num" id="sWrong">0</span><span class="score-label">Incorrectas</span></div>
-        <div class="score-item score-total"><span class="score-num" id="sTotal">0</span><span class="score-label">Total</span></div>
-      </div>
+    <div class="score-board" id="scoreBoard" style="display:none">
+      <div class="score-item score-correct"><span class="score-num" id="sCorrect">0</span><span class="score-label">Correctas</span></div>
+      <div class="score-item score-wrong"><span class="score-num" id="sWrong">0</span><span class="score-label">Incorrectas</span></div>
     </div>
   </header>
 
@@ -114,7 +99,7 @@
   <!-- REGISTRO -->
   <div id="registerScreen" class="card">
     <h2>Bienvenido/a 👋</h2>
-    <p>Ingresa tus datos para comenzar el simulador de funciones lineales.<br>Al terminar, registra tu resultado para que el docente pueda verlo.</p>
+    <p>Simulador de Funciones Lineales · 10 preguntas de nivel medio.<br>Ingresa tus datos para comenzar.</p>
     <div class="field">
       <label>Nombre completo</label>
       <input type="text" id="studentName" placeholder="Ej: María García López" autocomplete="off">
@@ -132,244 +117,232 @@
   </div>
 
   <!-- QUIZ -->
-  <div id="quizContent" style="display:none">
-    <div class="main-grid">
-      <div class="card graph-card">
-        <div class="graph-title">Gráfica · Plano cartesiano</div>
-        <canvas id="graphCanvas" width="400" height="360"></canvas>
-        <div class="equation-display" id="eqDisplay">y = mx + b</div>
-        <div class="graph-info">
-          <span class="ginfo"><span class="ginfo-dot"></span> Función actual</span>
-          <span class="ginfo" id="gSlopeInfo">Pendiente: —</span>
-          <span class="ginfo" id="gInterceptInfo">Intercepto: —</span>
-        </div>
-      </div>
-      <div class="card">
-        <div class="question-tag">Pregunta <span id="qNum">1</span> de 10</div>
-        <div id="typeBadge" class="question-type-badge badge-pendiente">Pendiente</div>
-        <div class="question-text" id="questionText">Cargando...</div>
-        <div class="options-grid" id="optionsGrid"></div>
-        <div class="feedback" id="feedback"></div>
-        <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Siguiente pregunta →</button>
-      </div>
-      <div class="card concept-panel">
-        <div class="concept-title">Conceptos clave · Función lineal</div>
-        <div class="concepts-row">
-          <div class="concept-chip"><span class="chip-label">Forma general</span><span class="chip-value">y = mx + b</span></div>
-          <div class="concept-chip"><span class="chip-label">Pendiente (m)</span><span class="chip-value" id="chipM">—</span></div>
-          <div class="concept-chip"><span class="chip-label">Intercepto y (b)</span><span class="chip-value" id="chipB">—</span></div>
-          <div class="concept-chip"><span class="chip-label">Intercepto x</span><span class="chip-value" id="chipX0">—</span></div>
-          <div class="concept-chip"><span class="chip-label">f(2) =</span><span class="chip-value" id="chipF2">—</span></div>
-          <div class="concept-chip"><span class="chip-label">Dirección</span><span class="chip-value" id="chipDir">—</span></div>
-        </div>
-      </div>
+  <div id="quizScreen" style="display:none">
+    <div class="card">
+      <div class="question-tag">Pregunta <span id="qNum">1</span> de 10</div>
+      <div id="typeBadge" class="question-type-badge badge-pendiente">Pendiente</div>
+      <div class="question-text" id="questionText"></div>
+      <div class="options-grid" id="optionsGrid"></div>
+      <div class="feedback" id="feedback"></div>
+      <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Siguiente →</button>
     </div>
   </div>
 
-  <!-- END SCREEN -->
+  <!-- RESULTADOS -->
   <div class="end-screen" id="endScreen">
     <div class="end-icon" id="endIcon">🎯</div>
-    <div class="end-title" id="endTitle">¡Simulación completada!</div>
-    <div class="end-sub" id="endSub">Resultados guardados</div>
+    <div class="end-title" id="endTitle">¡Completado!</div>
+    <div class="end-sub" id="endSub"></div>
     <div class="end-stats">
       <div class="end-stat"><span class="end-stat-num" id="endCorrect" style="color:var(--correct)">—</span><span class="end-stat-label">Correctas</span></div>
       <div class="end-stat"><span class="end-stat-num" id="endWrong" style="color:var(--wrong)">—</span><span class="end-stat-label">Incorrectas</span></div>
       <div class="end-stat"><span class="end-stat-num" id="endPct" style="color:var(--accent)">—</span><span class="end-stat-label">Aciertos</span></div>
+      <div class="end-stat"><span class="end-stat-num" id="endNota" style="color:var(--accent3)">—</span><span class="end-stat-label">Nota</span></div>
     </div>
-    <div class="end-btns">
-      <button class="restart-btn" onclick="restartQuiz()">Nuevo intento →</button>
-    </div>
+    <button class="restart-btn" onclick="restartQuiz()">Nuevo intento →</button>
     <div id="registerBox"></div>
+    <div class="review" id="reviewBox"></div>
   </div>
 </div>
 
 <script>
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwMrKr8zH4a6saHbOvpy4MSwxh7_BkCoIi03_D_nyTF3YeVnP-Gz8psXTc4JJHhs_IjXg/exec";
 const ASIGNATURA = "Funciones Lineales 10°";
-const TOTAL_Q = 10;
+const LETRAS = ["A","B","C","D"];
+
+// ── 10 PREGUNTAS FIJAS ────────────────────────────────────────────────────────
+const PREGUNTAS = [
+  // ── PENDIENTE (3) ──
+  {
+    tipo:"Pendiente", badge:"badge-pendiente",
+    q:"¿Cuál es la pendiente de la función <strong>y = 2x − 3</strong>?",
+    o:["m = −3","m = 2","m = 3","m = −2"], c:1,
+    exp:"En y = mx + b, el coeficiente de x es la pendiente. Aquí m = 2."
+  },
+  {
+    tipo:"Pendiente", badge:"badge-pendiente",
+    q:"Dados los puntos A(1, 3) y B(3, 7), ¿cuál es la pendiente de la recta que los une?",
+    o:["m = 1","m = 3","m = 2","m = 4"], c:2,
+    exp:"m = (y₂ − y₁)/(x₂ − x₁) = (7 − 3)/(3 − 1) = 4/2 = 2."
+  },
+  {
+    tipo:"Pendiente", badge:"badge-pendiente",
+    q:"¿Cuál es la pendiente de la función <strong>y = −½x + 4</strong>?",
+    o:["m = 4","m = ½","m = −4","m = −½"], c:3,
+    exp:"La pendiente es el coeficiente de x: m = −½. La función es decreciente."
+  },
+
+  // ── ECUACIÓN (3) ──
+  {
+    tipo:"Ecuación", badge:"badge-ecuacion",
+    q:"Una función lineal tiene pendiente m = 3 e intercepto en y igual a −2. ¿Cuál es su ecuación?",
+    o:["y = −2x + 3","y = 3x − 2","y = 2x − 3","y = 3x + 2"], c:1,
+    exp:"Usando y = mx + b con m = 3 y b = −2: y = 3x − 2."
+  },
+  {
+    tipo:"Ecuación", badge:"badge-ecuacion",
+    q:"Una recta pasa por el origen (0, 0) y por el punto (2, 6). ¿Cuál es su ecuación?",
+    o:["y = 2x","y = 6x","y = 3x","y = x + 6"], c:2,
+    exp:"m = (6−0)/(2−0) = 3. Como pasa por el origen, b = 0. Ecuación: y = 3x."
+  },
+  {
+    tipo:"Ecuación", badge:"badge-ecuacion",
+    q:"Una función lineal pasa por (0, 5) y tiene pendiente m = −1. ¿Cuál es su ecuación?",
+    o:["y = x − 5","y = −x − 5","y = −x + 5","y = x + 5"], c:2,
+    exp:"El punto (0,5) indica b = 5. Con m = −1: y = −x + 5."
+  },
+
+  // ── INTERCEPTO Y PUNTOS DE CORTE (4) ──
+  {
+    tipo:"Intercepto y puntos", badge:"badge-intercepto",
+    q:"¿En qué punto corta la función <strong>y = 2x − 6</strong> al eje X?",
+    o:["(6, 0)","(3, 0)","(0, −6)","(−3, 0)"], c:1,
+    exp:"Para hallar el intercepto en x, igualamos y = 0: 0 = 2x − 6 → x = 3. Punto: (3, 0)."
+  },
+  {
+    tipo:"Intercepto y puntos", badge:"badge-intercepto",
+    q:"¿En qué punto corta la función <strong>y = −x + 4</strong> al eje Y?",
+    o:["(4, 0)","(0, −4)","(0, 4)","(−4, 0)"], c:2,
+    exp:"El intercepto en y se obtiene con x = 0: y = −(0) + 4 = 4. Punto: (0, 4)."
+  },
+  {
+    tipo:"Intercepto y puntos", badge:"badge-intercepto",
+    q:"¿Cuál de estos puntos pertenece a la función <strong>y = 3x − 1</strong>?",
+    o:["(1, 1)","(2, 5)","(0, 3)","(−1, −4)"], c:1,
+    exp:"Verificamos (2, 5): y = 3(2) − 1 = 6 − 1 = 5. ✓ El punto (2, 5) pertenece a la función."
+  },
+  {
+    tipo:"Intercepto y puntos", badge:"badge-intercepto",
+    q:"La función <strong>y = ½x + 1</strong> corta al eje X en el punto:",
+    o:["(−2, 0)","(0, 1)","(2, 0)","(1, 0)"], c:0,
+    exp:"0 = ½x + 1 → ½x = −1 → x = −2. El intercepto en x es (−2, 0)."
+  }
+];
 
 let studentName='', studentCourse='';
-let correct=0, wrong=0, total=0;
+let current=0, correct=0, wrong=0;
 let answered=false;
+let userAnswers=[];
 
-const rnd=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
-const pick=arr=>arr[Math.floor(Math.random()*arr.length)];
-const shuffle=arr=>[...arr].sort(()=>Math.random()-0.5);
-const frmt=n=>Number.isInteger(n)?String(n):n.toFixed(2);
-
-function buildEquation(m,b){
-  let s='y = ';
-  if(m===1)s+='x';else if(m===-1)s+='-x';else s+=`${frmt(m)}x`;
-  if(b>0)s+=` + ${b}`;else if(b<0)s+=` - ${Math.abs(b)}`;
-  return s;
-}
-
-function buildURL(nombre,curso,correctas,incorrectas,porcentaje,nota,fecha){
-  const params=new URLSearchParams({
-    asignatura:ASIGNATURA,nombre,curso,
-    correctas,incorrectas,porcentaje,nota,fecha
-  });
-  return SCRIPT_URL+"?"+params.toString();
-}
+const $=id=>document.getElementById(id);
 
 function startQuiz(){
-  const n=document.getElementById('studentName').value.trim();
-  const c=document.getElementById('studentCourse').value;
-  if(!n||!c){const e=document.getElementById('regErr');e.style.display='block';setTimeout(()=>e.style.display='none',3000);return;}
-  studentName=n;studentCourse=c;
-  document.getElementById('registerScreen').style.display='none';
-  document.getElementById('quizContent').style.display='block';
-  document.getElementById('scoreBoard').style.display='flex';
-  loadQuestion();
+  const n=$('studentName').value.trim(), c=$('studentCourse').value;
+  if(!n||!c){$('regErr').style.display='block';setTimeout(()=>$('regErr').style.display='none',3000);return;}
+  studentName=n; studentCourse=c;
+  current=0; correct=0; wrong=0; userAnswers=[];
+  $('registerScreen').style.display='none';
+  $('quizScreen').style.display='block';
+  $('scoreBoard').style.display='flex';
+  renderQuestion();
 }
 
-function generateFunction(){
-  const ms=[-3,-2,-1,1,2,3,-0.5,0.5],bs=[-4,-3,-2,-1,0,1,2,3,4];
-  return{m:pick(ms),b:pick(bs)};
-}
-function ensureOneCorrect(opts,correctOpt){
-  if(!opts.some(o=>o.correct))opts[0]=correctOpt;
-  let found=false;opts.forEach(o=>{if(o.correct){if(found)o.correct=false;else found=true;}});
-}
-function generateQuestion(fn){
-  const{m,b}=fn,eq=buildEquation(m,b);
-  const types=[
-    ()=>{const vals=shuffle([...new Set([m,m+1,m-1,m+2,-m])].slice(0,4));const opts=vals.map(v=>({label:`m = ${frmt(v)}`,value:v,correct:v===m}));ensureOneCorrect(opts,{label:`m = ${frmt(m)}`,correct:true});return{type:'Pendiente',badge:'badge-pendiente',text:`Para la función <strong>${eq}</strong>, ¿cuál es la pendiente (m)?`,options:opts};},
-    ()=>{const vals=shuffle([...new Set([b,b+1,b-1,b+2,b-3])].slice(0,4));const opts=vals.map(v=>({label:`b = ${v}`,correct:v===b}));ensureOneCorrect(opts,{label:`b = ${b}`,correct:true});return{type:'Intercepto en y',badge:'badge-intercepto',text:`¿Dónde corta la función <strong>${eq}</strong> al eje Y?`,options:opts};},
-    ()=>{const x=pick([-3,-2,-1,0,1,2,3,4]),res=m*x+b;const dec=[res+1,res-1,res+2,res-2].filter(v=>v!==res);const opts=shuffle([res,...dec.slice(0,3)]).map(v=>({label:`f(${x}) = ${frmt(v)}`,correct:v===res}));ensureOneCorrect(opts,{label:`f(${x}) = ${frmt(res)}`,correct:true});return{type:'Evaluación',badge:'badge-punto',text:`Si <strong>${eq}</strong>, ¿cuánto vale f(${x})?`,options:opts};},
-    ()=>{if(m===0)return generateQuestion(fn);const x0=-b/m;const dec=[x0+1,x0-1,x0+2,-x0].filter(v=>v!==x0);const opts=shuffle([x0,...dec.slice(0,3)]).map(v=>({label:`x = ${frmt(v)}`,correct:Math.abs(v-x0)<0.001}));ensureOneCorrect(opts,{label:`x = ${frmt(x0)}`,correct:true});return{type:'Intercepto en x',badge:'badge-intercepto',text:`¿Dónde corta la función <strong>${eq}</strong> al eje X?`,options:opts};},
-    ()=>{const pos=m>0;const opts=shuffle([{label:'Creciente (m > 0)',correct:pos},{label:'Decreciente (m < 0)',correct:!pos},{label:'Constante (m = 0)',correct:false},{label:'No es función lineal',correct:false}]);return{type:'Comportamiento',badge:'badge-grafica',text:`¿La función <strong>${eq}</strong> es creciente o decreciente?`,options:opts};},
-    ()=>{const cands=[generateFunction(),generateFunction(),generateFunction()].filter(f=>!(f.m===m&&f.b===b));const opts=shuffle([{label:eq,correct:true},...cands.slice(0,3).map(f=>({label:buildEquation(f.m,f.b),correct:false}))]);return{type:'Identificación',badge:'badge-grafica',text:`¿Cuál es la ecuación con pendiente <strong>m = ${frmt(m)}</strong> e intercepto <strong>b = ${b}</strong>?`,options:opts};},
-    ()=>{const x=pick([1,2,3,-1]),yT=m*x+b;const dec=[yT+1,yT-1,yT+3].filter(v=>v!==yT);const opts=shuffle([yT,...dec.slice(0,3)]).map(v=>({label:`(${x}, ${frmt(v)})`,correct:v===yT}));ensureOneCorrect(opts,{label:`(${x}, ${frmt(yT)})`,correct:true});return{type:'Punto en la recta',badge:'badge-punto',text:`¿Cuál de estos puntos pertenece a la función <strong>${eq}</strong>?`,options:opts};},
-  ];
-  return pick(types)();
-}
-
-function drawGraph(m,b){
-  const canvas=document.getElementById('graphCanvas');
-  const ctx=canvas.getContext('2d'),W=canvas.width,H=canvas.height;
-  ctx.clearRect(0,0,W,H);
-  const S=28,ox=W/2,oy=H/2;
-  ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
-  ctx.strokeStyle='rgba(0,229,255,0.07)';ctx.lineWidth=1;
-  for(let x=ox%S;x<W;x+=S){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
-  for(let y=oy%S;y<H;y+=S){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
-  ctx.strokeStyle='rgba(0,229,255,0.25)';ctx.lineWidth=1.5;
-  ctx.beginPath();ctx.moveTo(0,oy);ctx.lineTo(W,oy);ctx.stroke();
-  ctx.beginPath();ctx.moveTo(ox,0);ctx.lineTo(ox,H);ctx.stroke();
-  ctx.fillStyle='rgba(100,116,139,0.8)';ctx.font='11px Space Mono,monospace';ctx.textAlign='center';
-  for(let i=-6;i<=6;i++){if(!i)continue;ctx.fillText(i,ox+i*S,oy+16);ctx.textAlign='right';ctx.fillText(-i,ox-6,oy-i*S+4);ctx.textAlign='center';}
-  ctx.fillText('x',W-14,oy-8);ctx.textAlign='right';ctx.fillText('y',ox+18,14);ctx.textAlign='center';
-  const toC=(x,y)=>({cx:ox+x*S,cy:oy-y*S});
-  const x0s=-(ox/S+1),x0e=(W-ox)/S+1;
-  ctx.strokeStyle='#00e5ff';ctx.lineWidth=2.5;ctx.shadowColor='rgba(0,229,255,0.5)';ctx.shadowBlur=8;
-  ctx.beginPath();
-  const p0=toC(x0s,m*x0s+b);ctx.moveTo(p0.cx,p0.cy);
-  for(let xi=x0s;xi<=x0e;xi+=0.1){const p=toC(xi,m*xi+b);ctx.lineTo(p.cx,p.cy);}
-  ctx.stroke();ctx.shadowBlur=0;
-  const dot=(x,y,col,lbl)=>{const{cx,cy}=toC(x,y);if(cx<0||cx>W||cy<0||cy>H)return;ctx.beginPath();ctx.arc(cx,cy,5,0,Math.PI*2);ctx.fillStyle=col;ctx.fill();ctx.strokeStyle='#0a0e1a';ctx.lineWidth=2;ctx.stroke();ctx.fillStyle=col;ctx.font='bold 10px Space Mono,monospace';ctx.textAlign='left';ctx.fillText(lbl,cx+8,cy-6);};
-  dot(0,b,'#a78bfa',`(0,${frmt(b)})`);
-  if(m!==0){const xi=-b/m;if(Math.abs(xi)<7)dot(xi,0,'#34d399',`(${frmt(xi)},0)`);}
-}
-
-let currentFn=null;
-function loadQuestion(){
+function renderQuestion(){
   answered=false;
-  const fn=generateFunction();currentFn=fn;
-  const q=generateQuestion(fn);
-  drawGraph(fn.m,fn.b);
-  document.getElementById('eqDisplay').textContent=buildEquation(fn.m,fn.b);
-  document.getElementById('gSlopeInfo').textContent=`Pendiente: ${frmt(fn.m)}`;
-  document.getElementById('gInterceptInfo').textContent=`Intercepto y: ${fn.b}`;
-  document.getElementById('chipM').textContent=frmt(fn.m);
-  document.getElementById('chipB').textContent=fn.b;
-  document.getElementById('chipX0').textContent=fn.m!==0?frmt(-fn.b/fn.m):'∞';
-  document.getElementById('chipF2').textContent=frmt(fn.m*2+fn.b);
-  document.getElementById('chipDir').textContent=fn.m>0?'↗ Creciente':fn.m<0?'↘ Decreciente':'→ Constante';
-  document.getElementById('qNum').textContent=total+1;
-  document.getElementById('progressFill').style.width=`${(total/TOTAL_Q)*100}%`;
-  const badge=document.getElementById('typeBadge');
-  badge.textContent=q.type;badge.className=`question-type-badge ${q.badge}`;
-  document.getElementById('questionText').innerHTML=q.text;
-  const grid=document.getElementById('optionsGrid');grid.innerHTML='';
-  const letters=['A','B','C','D'];
-  q.options.forEach((opt,i)=>{
+  const p=PREGUNTAS[current];
+  $('qNum').textContent=current+1;
+  $('progressFill').style.width=`${(current/10)*100}%`;
+  const badge=$('typeBadge');
+  badge.textContent=p.tipo; badge.className=`question-type-badge ${p.badge}`;
+  $('questionText').innerHTML=p.q;
+  const grid=$('optionsGrid'); grid.innerHTML='';
+  p.o.forEach((txt,i)=>{
     const btn=document.createElement('button');
     btn.className='option-btn';
-    btn.innerHTML=`<span class="option-letter">${letters[i]}</span>${opt.label}`;
-    btn.onclick=()=>selectOption(btn,opt.correct,q.options);
+    btn.innerHTML=`<span class="option-letter">${LETRAS[i]}</span>${txt}`;
+    btn.onclick=()=>selectOption(i,btn);
     grid.appendChild(btn);
   });
-  const fb=document.getElementById('feedback');
-  fb.className='feedback';fb.textContent='';
-  document.getElementById('nextBtn').className='next-btn';
+  $('feedback').className='feedback';
+  $('feedback').textContent='';
+  $('nextBtn').className='next-btn';
 }
 
-function selectOption(btn,isCorrect,allOpts){
+function selectOption(idx, btn){
   if(answered)return;
-  answered=true;total++;
-  document.querySelectorAll('.option-btn').forEach((b,i)=>{
+  answered=true;
+  const p=PREGUNTAS[current];
+  const btns=document.querySelectorAll('.option-btn');
+  btns.forEach((b,i)=>{
     b.disabled=true;
-    if(allOpts[i].correct)b.classList.add('correct');
-    else if(b===btn&&!isCorrect)b.classList.add('wrong');
+    if(i===p.c) b.classList.add('correct');
+    else if(i===idx&&idx!==p.c) b.classList.add('wrong');
   });
-  const fb=document.getElementById('feedback');
-  if(isCorrect){correct++;fb.className='feedback correct-fb show';fb.innerHTML='✓ ¡Correcto! Excelente análisis de la función.';}
-  else{wrong++;fb.className='feedback wrong-fb show';fb.innerHTML=`✗ Incorrecto. La respuesta correcta es: <strong>${allOpts.find(o=>o.correct)?.label||''}</strong>`;}
-  document.getElementById('sCorrect').textContent=correct;
-  document.getElementById('sWrong').textContent=wrong;
-  document.getElementById('sTotal').textContent=total;
-  const nb=document.getElementById('nextBtn');
+  const bien=idx===p.c;
+  if(bien){correct++;}else{wrong++;}
+  userAnswers.push({idx, bien});
+  $('sCorrect').textContent=correct;
+  $('sWrong').textContent=wrong;
+  const fb=$('feedback');
+  fb.className=`feedback ${bien?'correct-fb':'wrong-fb'} show`;
+  fb.innerHTML=bien?`✓ ¡Correcto! ${p.exp}`:`✗ Incorrecto. ${p.exp}`;
+  const nb=$('nextBtn');
   nb.className='next-btn show';
-  nb.textContent=total>=TOTAL_Q?'Ver resultados →':'Siguiente pregunta →';
+  nb.textContent=current===9?'Ver resultados →':'Siguiente →';
 }
 
 function nextQuestion(){
-  if(total>=TOTAL_Q){showEndScreen();return;}
-  loadQuestion();
+  if(current===9){showEnd();return;}
+  current++;
+  renderQuestion();
 }
 
-function showEndScreen(){
-  const pct=Math.round((correct/TOTAL_Q)*100);
+function showEnd(){
+  $('quizScreen').style.display='none';
+  const pct=Math.round(correct/10*100);
   const nota=parseFloat((1+correct*0.4).toFixed(1));
   const fecha=new Date().toLocaleString('es-CO');
 
-  document.getElementById('quizContent').style.display='none';
-  const end=document.getElementById('endScreen');end.style.display='block';
-  document.getElementById('endCorrect').textContent=correct;
-  document.getElementById('endWrong').textContent=wrong;
-  document.getElementById('endPct').textContent=pct+'%';
-  document.getElementById('endSub').textContent=`${studentName} · ${studentCourse}`;
+  $('endIcon').textContent=pct>=90?'🏆':pct>=70?'⭐':pct>=50?'📈':'📚';
+  $('endTitle').textContent=pct>=90?'¡Dominio excelente!':pct>=70?'¡Muy buen trabajo!':pct>=50?'Vas por buen camino':'Sigue practicando';
+  $('endSub').textContent=`${studentName} · ${studentCourse}`;
+  $('endCorrect').textContent=correct;
+  $('endWrong').textContent=wrong;
+  $('endPct').textContent=pct+'%';
+  $('endNota').textContent=nota;
+  $('endScreen').style.display='block';
 
-  let icon='🎯',title='¡Simulación completada!';
-  if(pct>=90){icon='🏆';title='¡Dominio excelente!';}
-  else if(pct>=70){icon='⭐';title='¡Muy buen trabajo!';}
-  else if(pct>=50){icon='📈';title='Vas por buen camino';}
-  else{icon='📚';title='Sigue practicando';}
-  document.getElementById('endIcon').textContent=icon;
-  document.getElementById('endTitle').textContent=title;
+  // Construir URL con p1..p10
+  const params=new URLSearchParams({
+    asignatura:ASIGNATURA, nombre:studentName, curso:studentCourse,
+    correctas:correct, incorrectas:wrong, porcentaje:pct, nota, fecha
+  });
+  userAnswers.forEach((a,i)=>params.append('p'+(i+1), LETRAS[a.idx]+(a.bien?'✓':'✗')));
+  const url=SCRIPT_URL+'?'+params.toString();
 
-  // Botón de registro
-  const url=buildURL(studentName,studentCourse,correct,wrong,pct,nota,fecha);
-  document.getElementById('registerBox').innerHTML=`
+  $('registerBox').innerHTML=`
     <div class="register-note">
-      <strong style="color:var(--accent)">⚠ Paso final:</strong> Haz clic en el botón para registrar tu resultado en el sistema del docente. Se abrirá una pestaña — si ves <strong>{"ok":true}</strong> quedó guardado correctamente.
+      <strong style="color:var(--accent)">⚠ Paso final obligatorio:</strong> Haz clic en el botón para registrar tu resultado. Se abrirá una pestaña — si ves <strong>{"ok":true}</strong> quedó guardado.
     </div>
-    <button class="restart-btn" style="margin-top:16px;background:linear-gradient(135deg,#10b981,#059669)"
-      onclick="window.open('${url}','_blank');this.textContent='✓ Resultado registrado';this.style.opacity='.7'">
+    <button class="restart-btn" style="background:linear-gradient(135deg,#10b981,#059669);margin-top:14px"
+      onclick="window.open('${url}','_blank');this.textContent='✓ Resultado registrado';this.style.opacity='.6'">
       📋 Registrar resultado de ${studentName}
     </button>`;
+
+  // Revisión
+  const rev=$('reviewBox');
+  rev.innerHTML='<h3>Revisión de respuestas</h3>';
+  PREGUNTAS.forEach((p,i)=>{
+    const a=userAnswers[i];
+    const d=document.createElement('div');
+    d.className=`rev-item ${a.bien?'ok':'no'}`;
+    d.innerHTML=`<div class="rev-q">${i+1}. ${a.bien?'✓':'✗'} ${p.tipo} — ${p.q}</div>
+      <div class="rev-a">Tu respuesta: <span>${LETRAS[a.idx]}) ${p.o[a.idx]}</span>
+      ${a.bien?'':` · Correcta: <span style="color:#6ee7b7">${LETRAS[p.c]}) ${p.o[p.c]}</span>`}</div>
+      <div class="rev-a" style="margin-top:4px;color:#64748b">${p.exp}</div>`;
+    rev.appendChild(d);
+  });
 }
 
 function restartQuiz(){
-  correct=0;wrong=0;total=0;studentName='';studentCourse='';
-  ['sCorrect','sWrong','sTotal'].forEach(id=>document.getElementById(id).textContent=0);
-  document.getElementById('progressFill').style.width='0%';
-  document.getElementById('endScreen').style.display='none';
-  document.getElementById('scoreBoard').style.display='none';
-  document.getElementById('registerScreen').style.display='block';
-  document.getElementById('studentName').value='';
-  document.getElementById('studentCourse').value='';
+  current=0;correct=0;wrong=0;userAnswers=[];
+  studentName='';studentCourse='';
+  $('sCorrect').textContent=0; $('sWrong').textContent=0;
+  $('progressFill').style.width='0%';
+  $('endScreen').style.display='none';
+  $('scoreBoard').style.display='none';
+  $('registerScreen').style.display='block';
+  $('studentName').value=''; $('studentCourse').value='';
 }
 </script>
 </body>
