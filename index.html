@@ -124,14 +124,16 @@
   <div id="registerScreen" class="card">
     <h2>Bienvenido/a 👋</h2>
     <p>Simulador de Funciones Lineales · Elige tu nivel y responde 10 preguntas.<br>Al terminar registra tu resultado para el docente.</p>
-    <div class="field"><label>Nombre completo</label>
-      <input type="text" id="studentName" placeholder="Ej: María García López" autocomplete="off"></div>
     <div class="field"><label>Curso</label>
       <select id="studentCourse">
         <option value="">— Selecciona tu curso —</option>
-        <option>10°A</option><option>10°B</option><option>10°C</option>
-        <option>11°A</option><option>11°B</option>
       </select>
+    </div>
+    <div class="field"><label>Nombre del estudiante</label>
+      <select id="studentNameSel" disabled>
+        <option value="">Primero selecciona tu curso</option>
+      </select>
+      <input type="text" id="studentNameManual" placeholder="Escribe tus nombres y apellidos completos" autocomplete="off" class="hide" style="margin-top:8px">
     </div>
     <div class="field"><label>Elige tu nivel</label>
       <div class="level-grid">
@@ -192,6 +194,163 @@
 const SCRIPT_URL="https://script.google.com/macros/s/AKfycbwMrKr8zH4a6saHbOvpy4MSwxh7_BkCoIi03_D_nyTF3YeVnP-Gz8psXTc4JJHhs_IjXg/exec";
 const ASIGNATURA="Funciones Lineales 10°";
 const LETRAS=["A","B","C","D"];
+
+// Listado real de estudiantes por curso (tomado del Excel oficial del colegio).
+// Los cursos 1003 y 1103 no tienen listado disponible todavía: para esos cursos
+// el nombre se escribe siempre de forma manual.
+const CURSOS=["1001","1002","1003","1101","1102","1103"];
+const ESTUDIANTES_POR_CURSO={
+  "1001": [
+    "ANGULO ROA SANTIAGO DAVID",
+    "BERMEJO SUAREZ RAFAEL EDUARDO",
+    "CABALLERO CELIN JUANA VALENTINA",
+    "CABALLERO ROA KENIER FELIPE",
+    "CARRILLO MANOTAS JHOINER DE JESUS",
+    "CASTILLO ROBLES FRANYELIS",
+    "CERVANTES MANOTAS BAIRON JAVITH",
+    "CERVANTES RINCON ANY VALENTINA",
+    "DE ALBA MORALES DARIO JOSE",
+    "DE LA CRUZ BARRERA ANDERSON",
+    "ESTRADA JIMENEZ SAMUEL",
+    "GONZALEZ VILLA MILEIDIS KATERINE",
+    "GRATEROL CHIRINOS FABIOLA ALEJANDRA",
+    "IGLESIAS CERVANTES ADRIAN RONALDO",
+    "LLANOS DE LA CRUZ SHIRLY MARGARITA",
+    "MARTINEZ ROMO LUIS DANIEL",
+    "MEJIA OSPINO FADER RAFAEL",
+    "NARVAEZ SANTACRUZ OSMER DAVID",
+    "OSPINO DEL RIO JUAN SEBASTIAN",
+    "PATERNINA ESCASIS CRISTINA ISABEL",
+    "PINEDA ARRIETA ERIKA ISABEL",
+    "PIÑERES PRIMERA MOISES MANUEL",
+    "RAMIREZ BOHORQUEZ ANYI CAROLINA",
+    "RODRIGUEZ SANDOVAL JUANA MARIA",
+    "RODRIGUEZ SANDOVAL NORELBIS EMILCE",
+    "RUIZ RODRIGUEZ JHOANER ANDRES",
+    "SANDOVAL RUIZ JAIRO",
+    "SARMIENTO YEPEZ KLEIDYS PAOLA",
+    "SUAREZ BALLESTAS YEIVER DAVID",
+    "VASQUEZ MIRANDA DALIANA MICHELL",
+    "VIZCAINO DE ALBA MARIANA LUCIA"
+  ],
+  "1002": [
+    "BARRIOS GONZALES JESUS DAVID",
+    "BARRIOS PRENTH KERLYS MARIA",
+    "CARRILLO ROA ANDRES FELIPE",
+    "DE LA HOZ ARIZA SHADIA VALENTINA",
+    "FIGUEREDO SANCHEZ MARLENIS",
+    "FONTALVO PACHECO JESUS DAVID",
+    "FRANCO RUIZ JHANS ROBERT",
+    "GARCIA ALCAZAR STIVEN JOSE",
+    "GONZALEZ HERNANDEZ YURIANA",
+    "GONZALEZ RESTREPO CRISTINA ISABEL",
+    "HERNANDEZ SANJUAN XAMIRA",
+    "HIDALGO BELEÑO MARIA CAMILA",
+    "HURTADO VILORIA MARIA ALEJANDRA",
+    "JAIME SALAS KAROL VANESSA",
+    "JIMENEZ BEDOYA YURLEIDIS",
+    "MACHADO SANTOYA YIRALIS DESIREE",
+    "MANZANILLA RODRIGUEZ RIXON RAFAEL",
+    "OLIVEROS PERNET JHONATAN DAVID",
+    "PACHECO BEUFORD DAYUSSI NICOL",
+    "PACHECO GONZALEZ VALERIA VALENTINA",
+    "PEREZ BUJATO MARIA ELVIRA",
+    "PRENTH VIDAL EDER MANUEL",
+    "ROA JIMENEZ BRENDA ISABEL",
+    "SANTACRUZ FONTALVO ANDRES FELIPE",
+    "SUAREZ ANGULO MARIANA",
+    "TORRES REYES GILLIAM CAROLINA",
+    "TORRES VELANDIA SARAHI VALENTINA",
+    "YEPEZ MORALES VALERIE NICOLL"
+  ],
+  "1101": [
+    "ALTAMAR MARRIAGA LUIS MANUEL",
+    "ANGULO SARMIENTO MARCELA",
+    "ARIZA MIRANDA FERNEY DAVID",
+    "ARIZA YEPEZ SARA LINEYS",
+    "BARONA GRANDET MILAGRO DE JESUS",
+    "BASSA VIZCAINO ALEXIS DE JESUS",
+    "BELTRAN CASTELLANOS SARAY",
+    "CAMPIÑO MALDONADO VALENTINA JOSE",
+    "CASSIANI PRENT CARMEN ALICIA",
+    "CASTRO SANTACRUZ RUBEYMIS YELENA",
+    "CERVANTES CASTELLANOS DAINER DAVID",
+    "CERVANTES GARCIA BRUSLEIDER",
+    "DE ALBA RAMOS MARIA FERNANDA",
+    "DE LA HOZ MANOTAS LORENA PAOLA",
+    "GOMEZ VENTURA ANGEL JOSE",
+    "GONZALEZ CASTRO PAULETH YULIANA",
+    "GONZALEZ OCHOA JUAN CAMILO",
+    "GONZALEZ VEGA JESUS ADRIAN",
+    "JARAMILLO GOMEZ ELIS DAVID",
+    "JIMENEZ BEDOYA DIANYS SARITH",
+    "JIMENEZ CASTILLO JESUS DANIEL",
+    "JIMENEZ MARTINEZ KLER",
+    "JIMENEZ SANCHEZ HELEN PATRICIA",
+    "LOPEZ MATOS MEYLUZ VANESSA",
+    "LUNA MERCADO SANTIAGO JOSE",
+    "MARES CERVANTES AMILCAR",
+    "MEDINA PEÑA PAULA ISABEL",
+    "MORALES ANGULO MARIA CAMILA",
+    "NIETO OROZCO ELIU DANIEL",
+    "OLIVERO PRENTH AYLIN DE LOS ANGELES",
+    "OSPINA BRIÑEZ JHOJAN STEBAN",
+    "POVEDA BARRAZA DUVAN JOSE",
+    "PRENTH MARTINEZ SANTIAGO MIGUEL",
+    "PRENTH MARTINEZ SEBASTIAN MIGUEL",
+    "SUAREZ MATTOS KEIDER DAVID",
+    "URINA ESPINOZA LOREYNNE GABRIELA",
+    "VILLANUEVA MOVILLA KANER"
+  ],
+  "1102": [
+    "ARELLANO MARTINEZ ANGIE PAOLA",
+    "CAMARGO BARRERA ELIZABETH PAOLA",
+    "CARO OSPINO NEYID DAVID",
+    "DE LA CRUZ BLANCO LILI JOHANA",
+    "ESMERAL RUIZ ISABEL CRISTINA",
+    "FIGUEROA SUAREZ ESTEFANY MARIA",
+    "FLOREZ CARRILLO NASHIRA PAOLA",
+    "FLOREZ CARRILLO NATALIA LUCIA",
+    "GRATEROL CHIRINOS FABIANA DE LOS ANGELES",
+    "HERNANDEZ PIANETA IGNACIO DAVID",
+    "JIMENEZ ZARATE JESUS DANIEL",
+    "MARIOTA HERNANDEZ LINDA PAOLA",
+    "MELGAREJO GONZALEZ FREIRYS ISABEL",
+    "MORALES CORONADO CRISTIAN CAMILO",
+    "MUÑOZ TORRES JOSEPH MANUEL",
+    "OCHOA VIZCAINO ALDAIR",
+    "PRENTH REDONDO OSKEIDER",
+    "RODRIGUEZ YEPEZ LUISA MARCELA",
+    "SUAREZ BERMEJO YEIVELIN ISABEL",
+    "TEJADA SARMIENTO YOHAYLIS DEL CARMEN",
+    "VALDEZ MANOTAS ALEXANDER",
+    "VENTURA MANOTAS JOSE DANIEL"
+  ]
+};;
+
+// Genera un identificador simple del navegador/equipo (fingerprint), sin librerías externas.
+// Combina características del entorno + un dibujo en canvas, las reduce con un hash y
+// guarda el resultado en localStorage para que sea estable en visitas futuras del mismo equipo.
+function generarFingerprint(){
+  try{const cacheado=localStorage.getItem("epr_fp");if(cacheado)return cacheado;}catch(e){}
+  let canvasFp="";
+  try{
+    const canvas=document.createElement("canvas");
+    const ctx=canvas.getContext("2d");
+    ctx.textBaseline="top";ctx.font="14px Arial";
+    ctx.fillStyle="#f60";ctx.fillRect(0,0,60,20);
+    ctx.fillStyle="#069";ctx.fillText("EPR-fp",2,2);
+    canvasFp=canvas.toDataURL();
+  }catch(e){}
+  let zonaHoraria="";
+  try{zonaHoraria=Intl.DateTimeFormat().resolvedOptions().timeZone||"";}catch(e){}
+  const partes=[navigator.userAgent||"",navigator.language||"",navigator.hardwareConcurrency||"",navigator.deviceMemory||"",(screen.width||"")+"x"+(screen.height||"")+"x"+(screen.colorDepth||""),zonaHoraria,canvasFp].join("###");
+  let hash=5381;
+  for(let i=0;i<partes.length;i++){hash=(hash<<5)+hash+partes.charCodeAt(i);hash=hash&hash;}
+  const fp="EQ-"+Math.abs(hash).toString(36);
+  try{localStorage.setItem("epr_fp",fp);}catch(e){}
+  return fp;
+}
 
 /* ── SVG GRÁFICAS ─────────────────────────────────────────────── */
 function svgPlano(lines, puntos, W=320, H=280){
@@ -380,6 +539,69 @@ let userAnswers=[];
 let preguntasActuales=[];
 
 const $=id=>document.getElementById(id);
+const OTRO_VALOR='__otro__';
+
+function poblarCursos(){
+  const sel=$('studentCourse');
+  CURSOS.forEach(c=>{
+    const op=document.createElement('option');
+    op.value=c; op.textContent=c;
+    sel.appendChild(op);
+  });
+}
+
+function cursoTieneListado(c){
+  return c && ESTUDIANTES_POR_CURSO[c] && ESTUDIANTES_POR_CURSO[c].length>0;
+}
+
+function actualizarNombres(){
+  const c=$('studentCourse').value;
+  const selName=$('studentNameSel');
+  const inpManual=$('studentNameManual');
+  inpManual.value='';
+  inpManual.classList.add('hide');
+
+  if(!c){
+    selName.innerHTML='<option value="">Primero selecciona tu curso</option>';
+    selName.disabled=true;
+    selName.classList.remove('hide');
+    return;
+  }
+  if(!cursoTieneListado(c)){
+    selName.classList.add('hide');
+    selName.disabled=true;
+    inpManual.classList.remove('hide');
+    return;
+  }
+  selName.classList.remove('hide');
+  selName.disabled=false;
+  let html='<option value="">Selecciona tu nombre</option>';
+  ESTUDIANTES_POR_CURSO[c].forEach(n=>{ html+=`<option value="${n}">${n}</option>`; });
+  html+=`<option value="${OTRO_VALOR}">Mi nombre no aparece en la lista</option>`;
+  selName.innerHTML=html;
+}
+
+function nombreElegido(){
+  const c=$('studentCourse').value;
+  if(!cursoTieneListado(c)) return $('studentNameManual').value.trim();
+  if($('studentNameSel').value===OTRO_VALOR) return $('studentNameManual').value.trim();
+  return $('studentNameSel').value;
+}
+
+$('studentCourse').onchange=actualizarNombres;
+$('studentNameSel').onchange=()=>{
+  const inpManual=$('studentNameManual');
+  if($('studentNameSel').value===OTRO_VALOR){
+    inpManual.classList.remove('hide');
+    inpManual.value='';
+    inpManual.focus();
+  } else {
+    inpManual.classList.add('hide');
+  }
+};
+
+poblarCursos();
+actualizarNombres();
 
 function selectLevel(nivel,el){
   nivelElegido=nivel;
@@ -388,7 +610,7 @@ function selectLevel(nivel,el){
 }
 
 function startQuiz(){
-  const n=$('studentName').value.trim(),c=$('studentCourse').value;
+  const c=$('studentCourse').value,n=nombreElegido();
   if(!n||!c||!nivelElegido){$('regErr').style.display='block';setTimeout(()=>$('regErr').style.display='none',3000);return;}
   studentName=n;studentCourse=c;
   current=0;correct=0;wrong=0;answered=false;userAnswers=[];
@@ -464,19 +686,12 @@ function showEnd(){
   const params=new URLSearchParams({
     asignatura:ASIGNATURA,nombre:studentName,curso:studentCourse,
     nivel:nivelElegido,correctas:correct,incorrectas:wrong,
-    porcentaje:pct,nota,fecha
+    porcentaje:pct,nota,fecha,fingerprint:generarFingerprint()
   });
   userAnswers.forEach((a,i)=>params.append('p'+(i+1),LETRAS[a.idx]+(a.bien?'✓':'✗')));
   const url=SCRIPT_URL+'?'+params.toString();
 
-  $('registerBox').innerHTML=`
-    <div class="register-note">
-      <strong style="color:var(--accent)">⚠ Paso final obligatorio:</strong> Haz clic en el botón para registrar tu resultado. Se abrirá una pestaña — si ves <strong>{"ok":true}</strong> quedó guardado.
-    </div>
-    <button class="restart-btn" style="background:linear-gradient(135deg,#10b981,#059669);margin-top:14px"
-      onclick="window.open('${url}','_blank');this.textContent='✓ Resultado registrado';this.style.opacity='.6'">
-      📋 Registrar resultado de ${studentName}
-    </button>`;
+  enviarSheets(url);
 
   // Revisión
   const rev=$('reviewBox');rev.innerHTML='<h3>Revisión de respuestas</h3>';
@@ -491,6 +706,21 @@ function showEnd(){
   });
 }
 
+function enviarSheets(url){
+  // Envío en segundo plano: no abre pestaña ni navega fuera del simulador.
+  // La imagen invisible dispara la petición GET; el navegador la ejecuta igual
+  // aunque nunca se vea la respuesta ni se cargue nada visible.
+  const beacon=new Image();
+  beacon.src=url;
+  $('registerBox').innerHTML=`
+    <div class="register-note" style="border-color:rgba(16,185,129,.3);color:#6ee7b7">
+      ✓ Tus datos se enviaron a Google Sheets.
+    </div>
+    <button class="restart-btn" style="background:linear-gradient(135deg,#10b981,#059669);margin-top:14px" onclick="enviarSheets('${url}')">
+      ↻ Registrar de nuevo
+    </button>`;
+}
+
 function restartQuiz(){
   current=0;correct=0;wrong=0;userAnswers=[];studentName='';studentCourse='';nivelElegido='';
   $('sCorrect').textContent=0;$('sWrong').textContent=0;
@@ -498,7 +728,8 @@ function restartQuiz(){
   $('endScreen').classList.add('hide');
   $('scoreBoard').style.display='none';
   $('registerScreen').classList.remove('hide');
-  $('studentName').value='';$('studentCourse').value='';
+  $('studentCourse').value='';
+  actualizarNombres();
   document.querySelectorAll('.level-card').forEach(c=>c.classList.remove('sel'));
 }
 </script>
